@@ -47,6 +47,7 @@ def translate(s: str):
     res = re.sub(pattern=r'\(.+\)',repl='', string=res).strip()
     res = re.sub(pattern=r'\[.+\]',repl='', string=res).strip()
     res = re.sub(pattern=r'\{.+\}',repl='', string=res).strip()
+    res = re.sub(pattern=r'〔.+〕',repl='', string=res).strip()
     return res
 
 
@@ -76,12 +77,12 @@ def addTranslation(romaji, meaning, kanji):
         if(meaning[i] != ""): res += f" ({kanji[i]}={meaning[i]})"
     return res
 
-def main():
+def nican(query: str):
     # query = "特急はくたかで富山に向かいます。それから、金沢に行って、兼六園に行きます。"
-    query = input()
+    # Replace weird whitespace with single space
+    query = re.sub(r'\s', ' ', query)
     res, typeOfWord = separate(query)
     romaji = toRomaji(" ".join(res)).split()
-
     meaning = getTranslation(res, typeOfWord, romaji)
 
     # print(res)
@@ -96,9 +97,10 @@ def main():
     # Remove whitespace after opening brackets:
     embedded = re.sub(pattern=r'([\(\[\{<]) ', repl='\\1',string=embedded)
 
-    print(embedded)
+    return embedded
+    # print(embedded)
 
 #
 
 if __name__ == '__main__':
-    main()
+    nican(input())

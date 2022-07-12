@@ -13,4 +13,4 @@ def main(sub_file):
 
 
 if __name__ == '__main__':
-    main(input())
+    main(input("Insert location of subtitle (.srt format subs): "))

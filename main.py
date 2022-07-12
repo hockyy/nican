@@ -36,7 +36,7 @@ def separate(s: str):
     return res, typeOfWord
 
 def translate(s: str):
-    cmd = f'~/.local/bin/myougiden -W --color no {s}'
+    cmd = f'~/.local/bin/myougiden -W -k --color no {s}'
     res = runAndGetOutput(cmd).strip()
     if(not res): return
     res = res.split('\t')[2].split(' ', 1)[1]
@@ -67,16 +67,17 @@ def getTranslation(res, typeOfWord, romaji, minTranslate = 100):
         minTranslate -= 1
     return meaning
 
-def addTranslation(romaji, meaning):
+def addTranslation(romaji, meaning, kanji):
     res = ""
     for i in range(len(romaji)):
         if(res != ""): res += " "
         res += romaji[i]
-        if(meaning[i] != ""): res += f" ({meaning[i]})"
+        if(meaning[i] != ""): res += f" ({kanji[i]}={meaning[i]})"
     return res
 
 def main():
-    query = "特急はくたかで富山に向かいます。それから、金沢に行って、兼六園に行きます。"
+    # query = "特急はくたかで富山に向かいます。それから、金沢に行って、兼六園に行きます。"
+    query = input()
     res, typeOfWord = separate(query)
     romaji = toRomaji(" ".join(res)).split()
 
@@ -87,7 +88,7 @@ def main():
     # print(romaji)
     # print(meaning)
 
-    embedded = addTranslation(romaji, meaning)
+    embedded = addTranslation(romaji, meaning, res)
 
     # Remove whitespace before symbols:
     embedded = re.sub(pattern=r' ([^a-zA-Z\d\(\[\{])', repl='\\1',string=embedded)

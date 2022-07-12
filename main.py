@@ -49,7 +49,7 @@ def translate(s: str):
     return res
 
 
-def getTranslation(res, typeOfWord, romaji, minTranslate = 2):
+def getTranslation(res, typeOfWord, romaji, minTranslate = 100):
     indexes = [i for i in range(len(res))]
     random.shuffle(indexes)
     blacklisted = ["記号", "助詞", "助動詞"]
@@ -67,23 +67,34 @@ def getTranslation(res, typeOfWord, romaji, minTranslate = 2):
         minTranslate -= 1
     return meaning
 
+def addTranslation(romaji, meaning):
+    res = ""
+    for i in range(len(romaji)):
+        if(res != ""): res += " "
+        res += romaji[i]
+        if(meaning[i] != ""): res += f" ({meaning[i]})"
+    return res
+
 def main():
-    res, typeOfWord = separate("特急はくたかで富山に向かいます。それから、金沢に行って、兼六園に行きます。")
+    query = "特急はくたかで富山に向かいます。それから、金沢に行って、兼六園に行きます。"
+    res, typeOfWord = separate(query)
     romaji = toRomaji(" ".join(res)).split()
 
     meaning = getTranslation(res, typeOfWord, romaji)
 
-    print(res)
-    print(typeOfWord)
-    print(romaji)
-    print(meaning)
-    # translate("特急はくたかで富山に向かいます。それから、金沢に行って、兼六園に行きます。")
-
-    # # Remove whitespace before symbols:
-    # res = re.sub(pattern=r' ([^a-zA-Z\d])', repl='\\1',string=res)
-    # # Remove whitespace after opening brackets:
-    # res = re.sub(pattern=r'([\(\[\{<]) ', repl='\\1',string=res)
     # print(res)
+    # print(typeOfWord)
+    # print(romaji)
+    # print(meaning)
+
+    embedded = addTranslation(romaji, meaning)
+
+    # Remove whitespace before symbols:
+    embedded = re.sub(pattern=r' ([^a-zA-Z\d\(\[\{])', repl='\\1',string=embedded)
+    # Remove whitespace after opening brackets:
+    embedded = re.sub(pattern=r'([\(\[\{<]) ', repl='\\1',string=embedded)
+
+    print(embedded)
 
 #
 

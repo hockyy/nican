@@ -16,11 +16,12 @@ def runAndGetOutput(cmd: str):
     return result
 
 def toRomaji(s: str):
-    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -i euc -Ha -Ka -Ja -Ea -ka'
+    # Add -Ka to change katakana too
+    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -i euc -Ha -Ja -Ka -Ea -ka  | iconv -f eucjp -t utf8'
     return runAndGetOutput(cmd)
 
 def toHiragana(s: str):
-    cmd = f'echo "{s}" | iconv -f utf8 -t shift-jis | kakasi -JH -KH -Ea | iconv -f shift-jis -t utf8'
+    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -JH -KH -Ea | iconv -f eucjp -t utf8'
     return runAndGetOutput(cmd)
 
 def separate(s: str):

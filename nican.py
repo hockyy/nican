@@ -69,7 +69,7 @@ def getTranslation(res, typeOfWord, romaji, minTranslate = 100):
         minTranslate -= 1
     return meaning
 
-color=["#fcbe11", "#184ea3"]
+color=["#fcbe11", "#8ad4ff"]
 shift = 0
 
 def addTranslation(base, meaning, kanji):

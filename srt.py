@@ -13,11 +13,14 @@ def main(sub_file):
     extension = sub_file.split('.')[-1]
     extension = 'srt'
     for line in tqdm(subs):
-        line.text = re.sub(r'\\N', '', line.text)
-        line.text = nican(line.text)
-        subs.save(f"{filename}_edited.{extension}")
-
-
+        try:
+            line.text = re.sub(r'\\N', '', line.text)
+            line.text = nican(line.text)
+            subs.save(f"{filename}_edited.{extension}")
+        except Exception as e:
+            print(e)
+            pass
+            
 if __name__ == '__main__':
     regexFiles = input("Insert location of subtitle: ")
     globFiles = sorted(glob.glob(regexFiles))

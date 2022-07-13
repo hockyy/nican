@@ -17,11 +17,11 @@ def runAndGetOutput(cmd: str):
 
 def toRomaji(s: str):
     # Add -Ka to change katakana too
-    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -i euc -Ha -Ja -Ka -Ea -ka  | iconv -f eucjp -t utf8'
+    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -i euc -Ha -Ja -Ka -Ea -ka | iconv -f eucjp -t utf8'
     return runAndGetOutput(cmd)
 
 def toHiragana(s: str):
-    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -JH -KH -Ea | iconv -f eucjp -t utf8'
+    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -JH -Ea | iconv -f eucjp -t utf8'
     return runAndGetOutput(cmd)
 
 def separate(s: str):
@@ -69,12 +69,20 @@ def getTranslation(res, typeOfWord, romaji, minTranslate = 100):
         minTranslate -= 1
     return meaning
 
-def addTranslation(romaji, meaning, kanji):
+color=["#fcbe11", "#184ea3"]
+shift = 0
+
+def addTranslation(base, meaning, kanji):
+    global shift
     res = ""
-    for i in range(len(romaji)):
+    for i in range(len(base)):
         if(res != ""): res += " "
-        res += romaji[i]
-        if(meaning[i] != ""): res += f" ({kanji[i]}={meaning[i]})"
+        if(meaning[i] != ""):
+            res += f"<font color=\"{color[shift]}\">{base[i]} ({kanji[i]}={meaning[i]})</font>"
+            shift ^= 1
+        else:
+            res += base[i]
+
     return res
 
 def nican(query: str):
@@ -83,6 +91,7 @@ def nican(query: str):
     query = re.sub(r'\s', ' ', query)
     res, typeOfWord = separate(query)
     romaji = toRomaji(" ".join(res)).split()
+    hiragana = toHiragana(" ".join(res)).split()
     meaning = getTranslation(res, typeOfWord, romaji)
 
     # print(res)
@@ -90,7 +99,7 @@ def nican(query: str):
     # print(romaji)
     # print(meaning)
 
-    embedded = addTranslation(romaji, meaning, res)
+    embedded = addTranslation(hiragana, meaning, res)
 
     # Remove whitespace before symbols:
     embedded = re.sub(pattern=r' ([^a-zA-Z\d\(\[\{])', repl='\\1',string=embedded)

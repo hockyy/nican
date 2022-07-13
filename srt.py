@@ -27,4 +27,8 @@ if __name__ == '__main__':
             path = Path(file)
             if(path.is_file()):
                 print(file)
-                main(file)
+                try:
+                    main(file)
+                except Exception as e:
+                    print(e)
+                    pass

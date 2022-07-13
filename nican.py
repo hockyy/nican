@@ -89,15 +89,21 @@ def addTranslation(base, meaning, kanji):
 def nican(query: str):
     # query = "特急はくたかで富山に向かいます。それから、金沢に行って、兼六園に行きます。"
     # Replace weird whitespace with single space
+    query = re.sub(r'―〞', '\'', query)
     query = re.sub(r'\s', ' ', query)
+    query = re.sub(r'〞', '\'', query)
+    query = re.sub(r'〝', '\'', query)
+    query = re.sub(r'”', '\'', query)
+    query = re.sub(r'“', '\'', query)
     res, typeOfWord = separate(query)
-    romaji = toRomaji(" ".join(res)).split()
-    hiragana = toHiragana(" ".join(res)).split()
-    meaning = getTranslation(res, typeOfWord, romaji)
-
+    romaji = toRomaji("|".join(res)).split('|')
+    hiragana = toHiragana("|".join(res)).split('|')
     # print(res)
     # print(typeOfWord)
     # print(romaji)
+    # print(hiragana)
+    meaning = getTranslation(res, typeOfWord, romaji)
+
     # print(meaning)
 
     embedded = addTranslation(hiragana, meaning, res)

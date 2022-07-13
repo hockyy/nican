@@ -21,7 +21,7 @@ def toRomaji(s: str):
     return runAndGetOutput(cmd)
 
 def toHiragana(s: str):
-    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -JH -Ea | iconv -f eucjp -t utf8'
+    cmd = f'echo "{s}" | iconv -f utf8 -t eucjp | kakasi -i euc -JH -Ea | iconv -f eucjp -t utf8'
     return runAndGetOutput(cmd)
 
 def separate(s: str):
@@ -75,6 +75,7 @@ shift = 0
 def addTranslation(base, meaning, kanji):
     global shift
     res = ""
+    # print(base)
     for i in range(len(base)):
         if(res != ""): res += " "
         if(meaning[i] != ""):
@@ -82,7 +83,7 @@ def addTranslation(base, meaning, kanji):
             shift ^= 1
         else:
             res += base[i]
-
+    # print(res)
     return res
 
 def nican(query: str):
@@ -112,4 +113,4 @@ def nican(query: str):
 #
 
 if __name__ == '__main__':
-    nican(input())
+    print(nican(input()))
